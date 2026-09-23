@@ -3,7 +3,7 @@ package com.mts.model;
 public class User {
 
     //User Table fields
-    private int userId;
+    private int userId; //primary key
     private String name;
     private String email;
     private String phone;

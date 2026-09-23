@@ -3,7 +3,7 @@ package com.mts.model;
 public class Theatre {
 
     //Theatre Table fields
-    private int theatreId;
+    private int theatreId; //primary key
     private String name;
     private String city;
     private String address;

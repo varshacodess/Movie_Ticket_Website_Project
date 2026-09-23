@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class Movie {
 
     //Movie Table fields
-    private int movieId;
+    private int movieId; //primary key
     private String title;
     private String language;
     private String genre;

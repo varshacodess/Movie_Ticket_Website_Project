@@ -6,7 +6,7 @@ public class Seat {
 
     //Seat Table fields
     private int seatId; //primary key
-    private Theatre theatre; //foreign key
+    private Theatre theatre; //represents the Seat relationship
     private String seatNumber;
     private String seatType;
     private BigDecimal price;
