@@ -10,7 +10,7 @@ public interface UserDAO {
     //void is return type and it returns nothing
 
     //creates the user
-    void registerUser(User user) throws SQLException;
+    void registerUser(User user);
 
     //updates the user
     void updateUser(User user);

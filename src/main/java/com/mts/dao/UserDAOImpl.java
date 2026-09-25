@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAOImpl implements UserDAO {
+public class UserDAOImpl implements UserDAO{
 
     // SQL queries
     private static final String registerUserSqlQuery =
@@ -50,8 +50,7 @@ public class UserDAOImpl implements UserDAO {
                 return;
             }
 
-            PreparedStatement ps =
-                    connection.prepareStatement(registerUserSqlQuery);
+            PreparedStatement ps = connection.prepareStatement(registerUserSqlQuery);
 
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
@@ -82,8 +81,7 @@ public class UserDAOImpl implements UserDAO {
                 return;
             }
 
-            PreparedStatement ps =
-                    connection.prepareStatement(updateUserSqlQuery);
+            PreparedStatement ps = connection.prepareStatement(updateUserSqlQuery);
 
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
@@ -123,8 +121,7 @@ public class UserDAOImpl implements UserDAO {
                 return;
             }
 
-            PreparedStatement ps =
-                    connection.prepareStatement(deleteUserSqlQuery);
+            PreparedStatement ps = connection.prepareStatement(deleteUserSqlQuery);
 
             ps.setInt(1, userId);
 
@@ -159,8 +156,7 @@ public class UserDAOImpl implements UserDAO {
                 return null;
             }
 
-            PreparedStatement ps =
-                    connection.prepareStatement(loginUserSqlQuery);
+            PreparedStatement ps = connection.prepareStatement(loginUserSqlQuery);
 
             ps.setString(1, email);
             ps.setString(2, password);
