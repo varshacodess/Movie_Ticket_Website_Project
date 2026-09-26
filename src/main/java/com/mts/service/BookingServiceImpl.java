@@ -1,0 +1,166 @@
+package com.mts.service;
+
+import com.mts.dao.BookedSeatDAO;
+import com.mts.dao.BookedSeatDAOImpl;
+import com.mts.dao.BookingDAO;
+import com.mts.dao.BookingDAOImpl;
+import com.mts.model.BookedSeat;
+import com.mts.model.Booking;
+import com.mts.model.Seat;
+import com.mts.model.Show;
+import com.mts.model.User;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class BookingServiceImpl implements BookingService {
+
+    private final BookingDAO bookingDAO;
+    private final BookedSeatDAO bookedSeatDAO;
+    private final SeatService seatService;
+    private final ShowService showService;
+
+    public BookingServiceImpl() {
+        this.bookingDAO = new BookingDAOImpl();
+        this.bookedSeatDAO = new BookedSeatDAOImpl();
+        this.seatService = new SeatServiceImpl();
+        this.showService = new ShowServiceImpl();
+    }
+
+    @Override
+    public Booking createBooking(
+            int userId,
+            int showId,
+            List<Integer> seatIds) {
+
+        if (userId <= 0) {
+            throw new IllegalArgumentException("Invalid user ID");
+        }
+
+        if (showId <= 0) {
+            throw new IllegalArgumentException("Invalid show ID");
+        }
+
+        if (seatIds == null || seatIds.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "At least one seat must be selected");
+        }
+
+        if (seatIds.size() > 10) {
+            throw new IllegalArgumentException(
+                    "Maximum 10 seats can be selected");
+        }
+
+        Set<Integer> uniqueSeatIds = new HashSet<>(seatIds);
+
+        if (uniqueSeatIds.size() != seatIds.size()) {
+            throw new IllegalArgumentException(
+                    "Duplicate seats cannot be selected");
+        }
+
+        Show show = showService.getShowById(showId);
+
+        if (show == null) {
+            throw new IllegalArgumentException("Show not found");
+        }
+
+        List<Seat> availableSeats =
+                seatService.getAvailableSeats(showId);
+
+        BigDecimal totalAmount =
+                getTotalAmount(seatIds, availableSeats);
+
+        User user = new User();
+        user.setUserId(userId);
+
+        Booking booking = new Booking(
+                0,
+                show,
+                user,
+                LocalDateTime.now(),
+                totalAmount,
+                "PENDING"
+        );
+
+        booking = bookingDAO.addBooking(booking);
+
+        if (booking == null) {
+            throw new IllegalStateException(
+                    "Failed to create booking");
+        }
+
+        for (Integer seatId : seatIds) {
+
+            Seat selectedSeat = null;
+
+            for (Seat seat : availableSeats) {
+
+                if (seat.getSeatId() == seatId) {
+                    selectedSeat = seat;
+                    break;
+                }
+            }
+
+            BookedSeat bookedSeat = new BookedSeat(
+                    0,
+                    selectedSeat,
+                    show,
+                    booking
+            );
+
+            bookedSeatDAO.addBookedSeat(bookedSeat);
+        }
+
+        return booking;
+    }
+
+    private BigDecimal getTotalAmount(
+            List<Integer> seatIds,
+            List<Seat> availableSeats) {
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (Integer seatId : seatIds) {
+
+            for (Seat seat : availableSeats) {
+
+                if (seat.getSeatId() == seatId) {
+                    total = total.add(seat.getPrice());
+                    break;
+                }
+            }
+        }
+
+        return total;
+    }
+
+    @Override
+    public Booking getBookingById(int bookingId) {
+
+        if (bookingId <= 0) {
+            throw new IllegalArgumentException(
+                    "Invalid booking ID");
+        }
+
+        return bookingDAO.getBookingById(bookingId);
+    }
+
+    @Override
+    public void updateBooking(Booking booking) {
+
+        if (booking == null) {
+            throw new IllegalArgumentException(
+                    "Booking cannot be null");
+        }
+
+        if (booking.getBookingId() <= 0) {
+            throw new IllegalArgumentException(
+                    "Invalid booking ID");
+        }
+
+        bookingDAO.updateBooking(booking);
+    }
+}
