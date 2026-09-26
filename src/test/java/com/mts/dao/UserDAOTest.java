@@ -25,11 +25,7 @@ public class UserDAOTest {
                 "ADMIN"
         );
 
-        try {
-            userDAO.registerUser(user);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        userDAO.registerUser(user);
     }
 
     @Test

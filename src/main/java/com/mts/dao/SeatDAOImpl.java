@@ -69,82 +69,6 @@ public class SeatDAOImpl implements SeatDAO {
     }
 
 
-    // UPDATE SEAT
-    @Override
-    public void updateSeat(Seat seat) {
-
-        try {
-            Connection connection = JdbcUtil.getConnection();
-
-            if (connection == null) {
-                return;
-            }
-
-            PreparedStatement ps =
-                    connection.prepareStatement(updateSeatSqlQuery);
-
-            ps.setInt(1, seat.getTheatre().getTheatreId());
-            ps.setString(2, seat.getSeatNumber());
-            ps.setString(3, seat.getSeatType());
-            ps.setBigDecimal(4, seat.getPrice());
-            ps.setInt(5, seat.getSeatId());
-
-            int rowsUpdated = ps.executeUpdate();
-
-            if (rowsUpdated > 0) {
-
-                logger.info("Seat updated successfully with ID: {}",
-                        seat.getSeatId());
-
-            } else {
-
-                logger.info("No seat found to update with ID: {}",
-                        seat.getSeatId());
-            }
-
-        } catch (SQLException e) {
-
-            logger.error("Failed to update seat", e);
-        }
-    }
-
-
-    // DELETE SEAT
-    @Override
-    public void deleteSeat(int seatId) {
-
-        try {
-            Connection connection = JdbcUtil.getConnection();
-
-            if (connection == null) {
-                return;
-            }
-
-            PreparedStatement ps =
-                    connection.prepareStatement(deleteSeatSqlQuery);
-
-            ps.setInt(1, seatId);
-
-            int rowsDeleted = ps.executeUpdate();
-
-            if (rowsDeleted > 0) {
-
-                logger.info("Seat deleted successfully with ID: {}",
-                        seatId);
-
-            } else {
-
-                logger.info("No seat found to delete with ID: {}",
-                        seatId);
-            }
-
-        } catch (SQLException e) {
-
-            logger.error("Failed to delete seat", e);
-        }
-    }
-
-
     // GET SEAT BY ID
     @Override
     public Seat getSeatById(int seatId) {
@@ -248,7 +172,11 @@ public class SeatDAOImpl implements SeatDAO {
 
             logger.error("Failed to get all seats", e);
         }
-
         return seats;
+    }
+
+    @Override
+    public List<Seat> getAvailableSeats(int showId) {
+        return List.of();
     }
 }
