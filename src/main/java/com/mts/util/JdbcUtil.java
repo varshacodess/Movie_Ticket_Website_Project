@@ -14,7 +14,6 @@ public class JdbcUtil {
 
         try{
             Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Database connected successfully!");
             return connection;
         }
         catch(SQLException e){
@@ -26,8 +25,8 @@ public class JdbcUtil {
     }
 
 // for testing purpose - to see if database is connected successfully or not
-    public static void main(String[] args) {
-        Connection connection = getConnection();
-
-    }
+//    public static void main(String[] args) {
+//        Connection connection = getConnection();
+//
+//    }
 }
