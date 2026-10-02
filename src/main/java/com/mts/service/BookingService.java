@@ -14,5 +14,11 @@ public interface BookingService {
 
     Booking getBookingById(int bookingId);
 
+    List<Booking> getAllBookings();
+
+    void cancelBooking(int bookingId);
+
     void updateBooking(Booking booking);
+
+    List<Booking> getBookingsByUserId(int userId);
 }

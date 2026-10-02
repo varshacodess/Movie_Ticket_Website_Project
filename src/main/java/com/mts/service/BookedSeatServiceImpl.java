@@ -12,6 +12,10 @@ public class BookedSeatServiceImpl implements BookedSeatService {
         this.bookedSeatDAO = new BookedSeatDAOImpl();
     }
 
+    public BookedSeatServiceImpl(BookedSeatDAO bookedSeatDAO) {
+        this.bookedSeatDAO = bookedSeatDAO;
+    }
+
     @Override
     public void addBookedSeat(BookedSeat bookedSeat) {
 

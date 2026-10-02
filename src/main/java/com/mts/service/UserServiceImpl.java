@@ -12,6 +12,11 @@ public class UserServiceImpl implements UserService {
         this.userDAO = new UserDAOImpl();
     }
 
+    // Constructor for Mockito testing
+    public UserServiceImpl(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
     @Override
     public void registerUser(User user) {
 
@@ -19,19 +24,19 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("User cannot be null");
         }
 
-        if (user.getName() == null || user.getName().isEmpty()) {
+        if (isInvalid(user.getName())) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
 
-        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+        if (isInvalid(user.getEmail())) {
             throw new IllegalArgumentException("Email cannot be empty");
         }
 
-        if (user.getPhone() == null || user.getPhone().isEmpty()) {
+        if (isInvalid(user.getPhone())) {
             throw new IllegalArgumentException("Phone cannot be empty");
         }
 
-        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+        if (isInvalid(user.getPassword())) {
             throw new IllegalArgumentException("Password cannot be empty");
         }
 
@@ -41,14 +46,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public User login(String email, String password) {
 
-        if (email == null || email.isEmpty()) {
+        if (isInvalid(email)) {
             throw new IllegalArgumentException("Email cannot be empty");
         }
 
-        if (password == null || password.isEmpty()) {
+        if (isInvalid(password)) {
             throw new IllegalArgumentException("Password cannot be empty");
         }
 
         return userDAO.login(email, password);
+    }
+
+    private boolean isInvalid(String value) {
+
+        return value == null
+                || value.trim().isEmpty()
+                || value.trim().equalsIgnoreCase("null");
     }
 }

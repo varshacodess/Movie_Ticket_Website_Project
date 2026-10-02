@@ -2,6 +2,7 @@ package com.mts.service;
 
 import com.mts.dao.PaymentDAO;
 import com.mts.dao.PaymentDAOImpl;
+import com.mts.exception.PaymentException;
 import com.mts.model.Payment;
 
 public class PaymentServiceImpl implements PaymentService {
@@ -12,28 +13,32 @@ public class PaymentServiceImpl implements PaymentService {
         this.paymentDAO = new PaymentDAOImpl();
     }
 
+    public PaymentServiceImpl(PaymentDAO paymentDAO) {
+        this.paymentDAO = paymentDAO;
+    }
+
     @Override
     public void makePayment(Payment payment) {
 
         if (payment == null) {
-            throw new IllegalArgumentException(
+            throw new PaymentException(
                     "Payment cannot be null");
         }
 
         if (payment.getBooking() == null) {
-            throw new IllegalArgumentException(
+            throw new PaymentException(
                     "Booking cannot be null");
         }
 
         if (payment.getAmount() == null ||
                 payment.getAmount().signum() <= 0) {
-            throw new IllegalArgumentException(
+            throw new PaymentException(
                     "Invalid payment amount");
         }
 
         if (payment.getPaymentMethod() == null ||
                 payment.getPaymentMethod().isEmpty()) {
-            throw new IllegalArgumentException(
+            throw new PaymentException(
                     "Payment method cannot be empty");
         }
 
@@ -44,7 +49,7 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment getPaymentById(int paymentId) {
 
         if (paymentId <= 0) {
-            throw new IllegalArgumentException(
+            throw new PaymentException(
                     "Invalid payment ID");
         }
 
@@ -55,12 +60,12 @@ public class PaymentServiceImpl implements PaymentService {
     public void updatePayment(Payment payment) {
 
         if (payment == null) {
-            throw new IllegalArgumentException(
+            throw new PaymentException(
                     "Payment cannot be null");
         }
 
         if (payment.getPaymentId() <= 0) {
-            throw new IllegalArgumentException(
+            throw new PaymentException(
                     "Invalid payment ID");
         }
 

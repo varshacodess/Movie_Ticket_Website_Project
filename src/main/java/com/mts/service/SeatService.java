@@ -5,7 +5,11 @@ import java.util.List;
 
 public interface SeatService {
 
-    List<Seat> getAvailableSeats(int showId);
+    void addSeat(Seat seat);
 
     Seat getSeatById(int seatId);
+
+    List<Seat> getAllSeats();
+
+    List<Seat> getAvailableSeats(int showId);
 }
