@@ -177,6 +177,67 @@ public class SeatDAOImpl implements SeatDAO {
 
     @Override
     public List<Seat> getAvailableSeats(int showId) {
-        return List.of();
+
+        List<Seat> seats = new ArrayList<>();
+
+        try {
+            Connection connection = JdbcUtil.getConnection();
+
+            if (connection == null) {
+                return seats;
+            }
+
+            final String getAvailableSeatsSqlQuery =
+                    "SELECT s.* FROM seats s " +
+                            "JOIN shows sh ON s.theatre_id = sh.theatre_id " +
+                            "WHERE sh.show_id = ? " +
+                            "AND s.seat_id NOT IN (" +
+                            "SELECT bs.seat_id FROM booked_seats bs " +
+                            "WHERE bs.show_id = ?" +
+                            ")";
+            PreparedStatement ps =
+                    connection.prepareStatement(
+                            getAvailableSeatsSqlQuery
+                    );
+
+            ps.setInt(1, showId);
+            ps.setInt(2, showId);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                int id = rs.getInt("seat_id");
+                int theatreId = rs.getInt("theatre_id");
+                String seatNumber = rs.getString("seat_number");
+                String seatType = rs.getString("seat_type");
+                BigDecimal price = rs.getBigDecimal("price");
+
+                Theatre theatre = new Theatre();
+                theatre.setTheatreId(theatreId);
+
+                Seat seat = new Seat(
+                        id,
+                        theatre,
+                        seatNumber,
+                        seatType,
+                        price
+                );
+
+                seats.add(seat);
+            }
+
+            logger.info(
+                    "Available seats retrieved for show ID: {}. Total seats: {}",
+                    showId,
+                    seats.size()
+            );
+
+        } catch (SQLException e) {
+            logger.error("Failed to get available seats", e);
+        }
+
+        return seats;
     }
-}
+
+   }

@@ -17,6 +17,9 @@ public class BookedSeatDAOImpl implements BookedSeatDAO {
     private static final String deleteBookedSeatSqlQuery =
             "DELETE FROM booked_seats WHERE booked_seat_id=?";
 
+    private static final String deleteBookedSeatsByBookingId = "DELETE FROM booked_seats WHERE booking_id=?";
+
+
     private static final Logger logger =
             LoggerFactory.getLogger(BookedSeatDAOImpl.class);
 
@@ -81,6 +84,22 @@ public class BookedSeatDAOImpl implements BookedSeatDAO {
 
         } catch (SQLException e) {
             logger.error("Failed to delete booked seat", e);
+        }
+    }
+
+    @Override
+    public void deleteBookedSeatsByBookingId(int bookingId) {
+        try (Connection connection = JdbcUtil.getConnection();
+             PreparedStatement ps = connection.prepareStatement(deleteBookedSeatsByBookingId)) {
+
+            ps.setInt(1, bookingId);
+            ps.executeUpdate();
+
+            logger.info("Booked seats released for Booking ID: {}", bookingId);
+
+        } catch (SQLException e) {
+            logger.error("Error releasing seats for Booking ID: {}", bookingId, e);
+            throw new RuntimeException(e);
         }
     }
 }

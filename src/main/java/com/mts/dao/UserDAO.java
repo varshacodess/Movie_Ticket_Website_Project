@@ -2,7 +2,6 @@ package com.mts.dao;
 
 import com.mts.model.User;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface UserDAO {
@@ -25,6 +24,7 @@ public interface UserDAO {
 
     //read operations
     User getUserById(int userId);
+
     List<User> getAllUsers();
 
 

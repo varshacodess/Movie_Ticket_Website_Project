@@ -6,7 +6,17 @@ import java.util.List;
 
 public interface ShowDAO {
 
-    List<Show> getShowsByMovie(int movieId);
+    // Admin operations
+    void addShow(Show show);
 
     Show getShowById(int showId);
+
+    List<Show> getAllShows();
+
+    void updateShow(Show show);
+
+    void deleteShow(int showId);
+
+    // Customer operation
+    List<Show> getShowsByMovie(int movieId);
 }

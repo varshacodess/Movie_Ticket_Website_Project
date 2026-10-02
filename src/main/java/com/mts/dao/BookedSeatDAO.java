@@ -7,4 +7,6 @@ public interface BookedSeatDAO {
     void addBookedSeat(BookedSeat bookedSeat);
 
     void deleteBookedSeat(int bookedSeatId);
+
+    void deleteBookedSeatsByBookingId(int bookingId);
 }
